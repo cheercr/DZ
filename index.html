@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIZEN SHOP — บริการสินค้าต่างๆ</title>
+<link rel="icon" href="https://i.postimg.cc/kgKQ5hck/a17e22dd-a60d-4083-ac5e-4ccadc960535.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#050310;
+    --bg-1:#0c0824;
+    --surface:#120d33;
+    --surface-2:#170f3f;
+    --line:rgba(150,130,255,0.16);
+    --blue:#3e63ff;
+    --violet:#8b5cf6;
+    --magenta:#c026d3;
+    --ink:#f4f1ff;
+    --ink-dim:#a79fd1;
+    --ink-mute:#726b9c;
+    --gold:#f2c879;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg-0);
+    color:var(--ink);
+    font-family:'Prompt',sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--violet);color:#fff;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- background layers ---------- */
+  #stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+  .aurora{position:fixed;inset:-20%;z-index:0;pointer-events:none;filter:blur(70px);opacity:0.55;}
+  .aurora span{position:absolute;border-radius:50%;mix-blend-mode:screen;}
+  .aurora span:nth-child(1){width:46vw;height:46vw;left:-10%;top:-8%;background:radial-gradient(circle,var(--blue),transparent 70%);animation:drift1 26s ease-in-out infinite;}
+  .aurora span:nth-child(2){width:38vw;height:38vw;right:-8%;top:8%;background:radial-gradient(circle,var(--violet),transparent 70%);animation:drift2 32s ease-in-out infinite;}
+  .aurora span:nth-child(3){width:42vw;height:42vw;left:20%;bottom:-18%;background:radial-gradient(circle,var(--magenta),transparent 72%);animation:drift3 30s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(6vw,8vh) scale(1.15);}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-7vw,6vh) scale(0.9);}}
+  @keyframes drift3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(4vw,-7vh) scale(1.1);}}
+
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  #stars{cursor:none;}
+  @media (hover:none){ #stars{cursor:auto;} }
+
+  /* ---------- layout shell ---------- */
+  .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 24px;}
+
+  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(5,3,16,0.55);border-bottom:1px solid var(--line);}
+  .navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1180px;margin:0 auto;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{width:38px;height:38px;border-radius:10px;box-shadow:0 0 22px rgba(139,92,246,0.55);}
+  .brand .name{font-weight:800;font-size:1.05rem;letter-spacing:0.03em;background:linear-gradient(90deg,#8fb8ff,#c9a6ff 45%,#f0a6e8);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .brand .sub{display:block;font-size:0.62rem;color:var(--ink-mute);font-weight:400;letter-spacing:0.08em;margin-top:1px;}
+
+  nav.links{display:flex;gap:28px;}
+  nav.links a{font-size:0.9rem;color:var(--ink-dim);font-weight:500;position:relative;padding-bottom:4px;transition:color .25s;}
+  nav.links a:hover,nav.links a:focus-visible{color:var(--ink);}
+  nav.links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--magenta));transform:scaleX(0);transform-origin:right;transition:transform .3s;}
+  nav.links a:hover::after,nav.links a:focus-visible::after{transform:scaleX(1);transform-origin:left;}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;padding:120px 24px 90px;text-align:center;}
+  .hero .logo-orb{position:relative;width:132px;height:132px;margin:0 auto 30px;}
+  .logo-orb::before{content:"";position:absolute;inset:-22px;border-radius:50%;background:conic-gradient(from 0deg,var(--blue),var(--violet),var(--magenta),var(--blue));filter:blur(26px);opacity:0.6;animation:spin 9s linear infinite;}
+  .logo-orb img{position:relative;width:100%;height:100%;border-radius:32px;object-fit:cover;box-shadow:0 0 50px rgba(139,92,246,0.55),0 0 0 1px rgba(255,255,255,0.08) inset;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:0.78rem;color:var(--ink-dim);border:1px solid var(--line);padding:6px 14px;border-radius:99px;background:rgba(255,255,255,0.02);margin-bottom:22px;}
+  .hero .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);animation:blink 1.6s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+
+  h1.hero-title{font-size:clamp(2.4rem,6vw,4.4rem);line-height:1.08;font-weight:800;margin:0 0 20px;letter-spacing:-0.01em;}
+  h1.hero-title .gradient{background:linear-gradient(100deg,#7fb2ff 0%,#b98bff 35%,#f19be0 60%,#7fb2ff 100%);background-size:300% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite;}
+  @keyframes shine{to{background-position:300% center;}}
+
+  .hero p.lead{max-width:560px;margin:0 auto 34px;color:var(--ink-dim);font-size:1.05rem;line-height:1.75;}
+
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:14px;font-weight:600;font-size:0.95rem;cursor:pointer;border:1px solid transparent;transition:transform .25s, box-shadow .25s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:linear-gradient(120deg,var(--blue),var(--violet));color:#fff;box-shadow:0 10px 30px -8px rgba(139,92,246,0.65);}
+  .btn-primary:hover{box-shadow:0 14px 36px -6px rgba(139,92,246,0.85);transform:translateY(-2px);}
+  .btn-ghost{border-color:var(--line);color:var(--ink);background:rgba(255,255,255,0.02);}
+  .btn-ghost:hover{border-color:var(--violet);}
+
+  /* ---------- marquee / strip ---------- */
+  .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,0.015);overflow:hidden;padding:14px 0;}
+  .strip .track{display:flex;gap:52px;width:max-content;animation:marquee 26s linear infinite;}
+  .strip span{font-size:0.82rem;letter-spacing:0.14em;color:var(--ink-mute);white-space:nowrap;display:flex;align-items:center;gap:10px;}
+  .strip span::before{content:"◆";color:var(--violet);font-size:0.6rem;}
+  @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ---------- section shell ---------- */
+  section{position:relative;z-index:2;padding:96px 0;}
+  .section-head{text-align:center;max-width:640px;margin:0 auto 56px;}
+  .section-head .tag{font-size:0.8rem;color:var(--violet);font-weight:600;margin-bottom:10px;display:block;}
+  .section-head h2{font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:800;margin:0 0 14px;}
+  .section-head p{color:var(--ink-dim);line-height:1.7;margin:0;}
+
+  /* ---------- feature chips ---------- */
+  .chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:56px;}
+  .chip{padding:26px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(139,92,246,0.07),rgba(255,255,255,0.015));}
+  .chip .n{font-family:'Prompt',sans-serif;font-weight:800;font-size:1.9rem;background:linear-gradient(90deg,#8fb8ff,#f0a6e8);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .chip .t{margin-top:8px;color:var(--ink-dim);font-size:0.92rem;line-height:1.6;}
+
+  /* ---------- pricing ---------- */
+  .grid-pricing{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px;}
+  .card{position:relative;border-radius:20px;padding:1px;background:linear-gradient(150deg,rgba(139,92,246,0.35),rgba(62,99,255,0.08) 40%,rgba(255,255,255,0.05));
+    opacity:0;transform:translateY(22px);transition:opacity .6s ease, transform .6s ease;}
+  .card.in{opacity:1;transform:translateY(0);}
+  .card .inner{height:100%;background:linear-gradient(165deg,var(--surface),var(--surface-2));border-radius:19px;padding:26px 24px 24px;display:flex;flex-direction:column;gap:14px;transition:transform .35s ease, box-shadow .35s ease;}
+  .card:hover .inner{transform:translateY(-6px);box-shadow:0 22px 46px -18px rgba(90,60,220,0.55);}
+  .card .top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .card .emoji{font-size:1.5rem;filter:drop-shadow(0 0 10px rgba(139,92,246,0.6));}
+  .card .price{font-weight:800;font-size:1.35rem;color:var(--gold);white-space:nowrap;}
+  .card h3{margin:0;font-size:1.06rem;font-weight:700;}
+  .card p{margin:0;color:var(--ink-dim);font-size:0.88rem;line-height:1.65;flex:1;}
+  .card .pick{margin-top:4px;align-self:flex-start;font-size:0.82rem;font-weight:600;color:var(--ink);border:1px solid var(--line);padding:9px 16px;border-radius:10px;transition:all .25s;cursor:pointer;background:transparent;}
+  .card .pick:hover{border-color:var(--violet);box-shadow:0 0 16px rgba(139,92,246,0.4);}
+
+  .card.featured .inner{background:linear-gradient(165deg,#1c1450,#100a34);}
+  .card.featured .emoji{filter:drop-shadow(0 0 12px rgba(242,200,121,0.75));}
+  .card.featured .price{color:#fff;}
+
+  .card.custom{grid-column:1 / -1;}
+  .card.custom .inner{flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;background:linear-gradient(120deg,rgba(62,99,255,0.16),rgba(192,38,212,0.16));}
+  .card.custom h3{font-size:1.2rem;}
+  .card.custom p{flex:unset;max-width:480px;}
+
+  /* ---------- process ---------- */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;counter-reset:step;}
+  .step{padding:28px 22px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,0.015);position:relative;overflow:hidden;}
+  .step::before{counter-increment:step;content:counter(step);position:absolute;top:-6px;right:6px;font-size:4.4rem;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(139,92,246,0.35);}
+  .step h4{margin:0 0 10px;font-size:1.02rem;font-weight:700;}
+  .step p{margin:0;color:var(--ink-dim);font-size:0.88rem;line-height:1.65;}
+
+  /* ---------- footer / contact ---------- */
+  footer{border-top:1px solid var(--line);padding:64px 0 40px;position:relative;z-index:2;}
+  .foot-cta{text-align:center;max-width:560px;margin:0 auto 50px;}
+  .foot-cta h2{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;margin:0 0 14px;}
+  .foot-cta p{color:var(--ink-dim);margin:0 0 26px;line-height:1.7;}
+  .contact-line{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);padding:12px 20px;border-radius:14px;background:rgba(255,255,255,0.02);color:var(--ink-dim);font-size:0.92rem;}
+  .shop-link{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;border-radius:14px;font-weight:700;font-size:0.98rem;color:#fff;background:linear-gradient(120deg,var(--blue),var(--violet) 55%,var(--magenta));box-shadow:0 12px 32px -10px rgba(139,92,246,0.7);transition:transform .25s, box-shadow .25s;}
+  .shop-link:hover{transform:translateY(-2px);box-shadow:0 16px 40px -8px rgba(139,92,246,0.9);}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;color:var(--ink-mute);font-size:0.8rem;padding-top:28px;border-top:1px solid var(--line);}
+
+  @media (max-width:720px){
+    nav.links{display:none;}
+    .hero{padding:96px 20px 70px;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div class="aurora"><span></span><span></span><span></span></div>
+<div class="grain"></div>
+
+<header>
+  <div class="navbar">
+    <div class="brand">
+      <img src="https://i.postimg.cc/kgKQ5hck/a17e22dd-a60d-4083-ac5e-4ccadc960535.png" alt="DIZEN SHOP">
+      <div>
+        <span class="name">DIZEN SHOP</span>
+        <span class="sub">DISCORD STUDIO</span>
+      </div>
+    </div>
+    <nav class="links">
+      <a href="#หน้าแรก">หน้าแรก</a>
+      <a href="#แพ็กเกจ">แพ็กเกจ</a>
+      <a href="#ขั้นตอน">วิธีสั่งซื้อ</a>
+      <a href="#ติดต่อ">ติดต่อ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="หน้าแรก">
+    <div class="wrap">
+      <div class="logo-orb"><img src="https://i.postimg.cc/kgKQ5hck/a17e22dd-a60d-4083-ac5e-4ccadc960535.png" alt="โลโก้ DIZEN SHOP"></div>
+      <div class="eyebrow"><span class="dot"></span> รับออกแบบเซิร์ฟเวอร์ดิสคอร์ดครบวงจร</div>
+      <h1 class="hero-title">ยกระดับดิสคอร์ดของคุณ<br>ให้ <span class="gradient">หรู เท่ ไม่เหมือนใคร</span></h1>
+      <p class="lead">DIZEN SHOP ออกแบบโครงสร้างห้อง หมวดหมู่ ยศ และระบบ ให้เข้ากับเซิร์ฟเวอร์คุณ ตั้งแต่ดิสขนาดเล็กไปจนถึงคอมมูนิตี้ระดับพัน — งานสวย ส่งไว ปรับได้ตามงบ</p>
+      <div class="cta-row">
+        <a href="#แพ็กเกจ" class="btn btn-primary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>
+          ดูแพ็กเกจทั้งหมด
+        </a>
+        <a href="#ขั้นตอน" class="btn btn-ghost">วิธีสั่งซื้อ</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <div class="track">
+      <span>สร้างห้อง</span><span>ระบบยศ</span><span>ดิสร้านค้า</span><span>ดิสสตรีมเมอร์</span><span>ดิสกิลด์ / แคลน</span><span>ดิสโรลเพลย์</span><span>งานคัสตอมตามงบ</span>
+      <span>สร้างห้อง</span><span>ระบบยศ</span><span>ดิสร้านค้า</span><span>ดิสสตรีมเมอร์</span><span>ดิสกิลด์ / แคลน</span><span>ดิสโรลเพลย์</span><span>งานคัสตอมตามงบ</span>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section>
+      <div class="section-head">
+        <span class="tag">ทำไมต้อง DIZEN</span>
+        <h2>งานออกแบบที่คิดเป็นระบบ ไม่ใช่แค่ห้องสวย</h2>
+        <p>ทุกแพ็กเกจผ่านการวางโครงสร้างให้เหมาะกับขนาดและวัตถุประสงค์ของเซิร์ฟเวอร์ ไม่ใช่แค่ตกแต่งหน้าตา</p>
+      </div>
+      <div class="chips">
+        <div class="chip"><div class="n">1</div><div class="t">รูปแบบแพ็กเกจ ตั้งแต่เซิร์ฟเวอร์ส่วนตัวไปจนถึงคอมมูนิตี้ขนาดใหญ่</div></div>
+        <div class="chip"><div class="n">2</div><div class="t">มีราคาเริ่มต้นสำหรับดิสเปล่าจัดโครงสร้างพื้นฐาน</div></div>
+        <div class="chip"><div class="n">3</div><div class="t">แจ้งงบที่มี ทางร้านประเมินจำนวนห้องและระบบให้เหมาะสม</div></div>
+      </div>
+    </section>
+
+    <section id="แพ็กเกจ">
+      <div class="section-head">
+        <span class="tag">แพ็กเกจ</span>
+        <h2>เลือกแพ็กเกจที่ตรงกับเซิร์ฟเวอร์คุณ</h2>
+        <p>ราคาระบุไว้ชัดเจน เลือกแพ็กเกจที่สนใจแล้วทักมาระบุรายละเอียดเพิ่มเติมได้เลย</p>
+      </div>
+      <div class="grid-pricing" id="pricingGrid">
+
+        <div class="card"><div class="inner">
+          <div class="top"><span class="emoji">🟢</span><span class="price">79.-</span></div>
+          <h3>ดิสเปล่าไม่มีระบบมีแต่ห้อง</h3>
+          <p>ห้อง + หมวดหมู่ + จัดโครงสร้างพื้นฐาน</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card"><div class="inner">
+          <div class="top"><span class="emoji">👤</span><span class="price">149.-</span></div>
+          <h3>ดิสส่วนตัว</h3>
+          <p>เซิร์ฟเวอร์ส่วนตัว / กลุ่มเพื่อน</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card"><div class="inner">
+          <div class="top"><span class="emoji">🛒</span><span class="price">249.-</span></div>
+          <h3>ดิสร้านค้า</h3>
+          <p>โครงสร้างร้าน + ห้องซื้อขาย + ห้องบริการลูกค้า</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card"><div class="inner">
+          <div class="top"><span class="emoji">👨‍👩‍👧</span><span class="price">279.-</span></div>
+          <h3>ดิสแก๊ง - ครอบครัว</h3>
+          <p>ห้องสมาชิก + ห้องพูดคุย + ห้องกิจกรรม + ระบบพื้นฐาน</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card"><div class="inner">
+          <div class="top"><span class="emoji">🏆</span><span class="price">329.-</span></div>
+          <h3>ดิสทีมแข่ง</h3>
+          <p>ห้องทีม + ห้องซ้อม + ห้องแข่ง + ห้องจัดการทีม</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card"><div class="inner">
+          <div class="top"><span class="emoji">⚔️</span><span class="price">379.-</span></div>
+          <h3>ดิสกิลด์ - แคลน</h3>
+          <p>โครงสร้างกิลด์/แคลน + ยศ + ห้องตามหน้าที่</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card"><div class="inner">
+          <div class="top"><span class="emoji">🎥</span><span class="price">429.-</span></div>
+          <h3>ดิสสตรีมเมอร์</h3>
+          <p>ห้องแฟนคลับ + แจ้งเตือน + ติดต่อ + Community</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card"><div class="inner">
+          <div class="top"><span class="emoji">💬</span><span class="price">549.-</span></div>
+          <h3>ดิสคอมมูนิตี้</h3>
+          <p>โครงสร้างขนาดใหญ่ + ระบบจัดการสมาชิก + ห้องกิจกรรม</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card"><div class="inner">
+          <div class="top"><span class="emoji">🌎</span><span class="price">699.-</span></div>
+          <h3>ดิสประเทศ - โรลเพลย์</h3>
+          <p>โครงสร้างขนาดใหญ่ + หลายฝ่าย/หลายบทบาท + ระบบตามบรีฟ</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card featured"><div class="inner">
+          <div class="top"><span class="emoji">👑</span><span class="price">899.-+</span></div>
+          <h3>Premium / ระบบจัดเต็ม</h3>
+          <p>สำหรับงานใหญ่ ระบบเยอะ และต้องการปรับแต่งเฉพาะทาง</p>
+          <button class="pick">เลือกแพ็กเกจนี้</button>
+        </div></div>
+
+        <div class="card custom"><div class="inner">
+          <div>
+            <div class="top" style="margin-bottom:10px;"><span class="emoji">💎</span></div>
+            <h3>ดิสตามงบลูกค้า</h3>
+            <p>มีงบเท่าไหร่ จัดให้ตามงบ 💸 แจ้งงบ + สิ่งที่ต้องการมาได้เลย ทางร้านจะประเมินจำนวนห้อง ระบบ และรายละเอียดงานให้เหมาะกับงบ งบน้อยก็ทำได้ งบเยอะก็จัดเต็ม</p>
+          </div>
+          <button class="pick" style="white-space:nowrap;">แจ้งงบของคุณ</button>
+        </div></div>
+
+      </div>
+    </section>
+
+    <section id="ขั้นตอน">
+      <div class="section-head">
+        <span class="tag">ขั้นตอน</span>
+        <h2>สั่งงานง่าย ใน 4 ขั้นตอน</h2>
+        <p>ตั้งแต่ทักแชทจนถึงส่งงาน ทุกขั้นตอนโปร่งใสและติดตามได้</p>
+      </div>
+      <div class="steps">
+        <div class="step"><h4>เลือกแพ็กเกจ</h4><p>ดูแพ็กเกจที่ตรงกับเซิร์ฟเวอร์ หรือแจ้งงบถ้าต้องการคัสตอม</p></div>
+        <div class="step"><h4>แจ้งรายละเอียด</h4><p>บอกธีม สี โลโก้ และฟีเจอร์ที่ต้องการให้ทีมงาน</p></div>
+        <div class="step"><h4>ทีมงานออกแบบ</h4><p>จัดโครงสร้างห้อง หมวดหมู่ และระบบตามบรีฟที่ได้รับ</p></div>
+        <div class="step"><h4>ส่งมอบงาน</h4><p>ตรวจสอบงานและส่งงาน</p></div>
+      </div>
+    </section>
+  </div>
+
+  <footer id="ติดต่อ">
+    <div class="wrap">
+      <div class="foot-cta">
+        <h2>พร้อมเปลี่ยนดิสคอร์ดของคุณแล้วหรือยัง?</h2>
+        <p>ทักแชทแจ้งแพ็กเกจที่สนใจ หรือแจ้งงบที่มี ทีมงานจะประเมินและตอบกลับโดยเร็วที่สุด</p>
+        <a href="https://discord.gg/dvQbD3SDUD" class="shop-link" id="shopLinkBtn" target="_blank" rel="noopener">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+          Discord Shop
+        </a>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 DIZEN SHOP — Discord Studio</span>
+        <span>ออกแบบด้วยใจ ส่งงานตรงเวลา</span>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+/* ---------------- starfield + DIZEN constellation cursor ---------------- */
+(function(){
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let w,h,stars=[];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasHover = matchMedia('(hover:hover)').matches;
+
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    const count = Math.min(140, Math.floor((w*h)/13000));
+    stars = Array.from({length:count},()=>({
+      x:Math.random()*w, y:Math.random()*h,
+      r:Math.random()*1.4+0.3,
+      p:Math.random()*Math.PI*2,
+      s:Math.random()*0.02+0.01,
+      hue: Math.random()<0.5 ? '140,150,255' : '200,150,255'
+    }));
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  /* --- cursor state: a rotating shard marker + a comet trail of fragments --- */
+  let mx=null, my=null, hasMouse=false;
+  const LINK_R = 130;
+  const shards = []; // {x,y,rot,vr,life,maxLife,size}
+  let lastSpawn = 0;
+
+  if(hasHover){
+    window.addEventListener('pointermove', e=>{
+      mx = e.clientX; my = e.clientY; hasMouse = true;
+      const now = performance.now();
+      if(now - lastSpawn > 40){
+        lastSpawn = now;
+        shards.push({
+          x:mx, y:my,
+          rot: Math.random()*Math.PI,
+          vr: (Math.random()-0.5)*0.06,
+          life: 1,
+          maxLife: 1,
+          size: Math.random()*5+4,
+          hueMix: Math.random()
+        });
+        if(shards.length > 40) shards.shift();
+      }
+    });
+    window.addEventListener('pointerleave', ()=>{ hasMouse=false; mx=null; my=null; });
+  }
+
+  function shardColor(mix, alpha){
+    // interpolate blue -> violet -> magenta
+    const stops = [[62,99,255],[139,92,246],[192,38,212]];
+    const seg = mix < 0.5 ? [stops[0],stops[1],mix*2] : [stops[1],stops[2],(mix-0.5)*2];
+    const [c1,c2,t] = seg;
+    const r = Math.round(c1[0]+(c2[0]-c1[0])*t);
+    const g = Math.round(c1[1]+(c2[1]-c1[1])*t);
+    const b = Math.round(c1[2]+(c2[2]-c1[2])*t);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+
+  function drawDiamond(x,y,size,rot,color){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rot);
+    ctx.beginPath();
+    ctx.moveTo(0,-size);
+    ctx.lineTo(size*0.62,0);
+    ctx.lineTo(0,size);
+    ctx.lineTo(-size*0.62,0);
+    ctx.closePath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.1;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function draw(t){
+    ctx.clearRect(0,0,w,h);
+
+    // stars, twinkling
+    for(const s of stars){
+      const alpha = 0.35 + 0.55*Math.abs(Math.sin(s.p + t*s.s));
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${s.hue},${alpha})`;
+      ctx.shadowColor = `rgba(${s.hue},${alpha})`;
+      ctx.shadowBlur = 6;
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+
+    // constellation links from nearby stars to the cursor
+    if(hasMouse && mx!=null){
+      for(const s of stars){
+        const dx = s.x-mx, dy = s.y-my;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist < LINK_R){
+          const a = (1 - dist/LINK_R) * 0.55;
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(160,140,255,${a})`;
+          ctx.lineWidth = 0.8;
+          ctx.moveTo(mx,my);
+          ctx.lineTo(s.x,s.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // comet trail of fading diamond shards
+    for(let i=shards.length-1;i>=0;i--){
+      const sh = shards[i];
+      sh.life -= 0.035;
+      sh.rot += sh.vr;
+      if(sh.life<=0){ shards.splice(i,1); continue; }
+      const alpha = sh.life * 0.85;
+      drawDiamond(sh.x, sh.y, sh.size*sh.life, sh.rot, shardColor(sh.hueMix, alpha));
+    }
+
+    // core cursor marker: pulsing gradient diamond
+    if(hasMouse && mx!=null){
+      const pulse = 9 + Math.sin(t*0.006)*2;
+      ctx.save();
+      ctx.shadowColor = 'rgba(139,92,246,0.9)';
+      ctx.shadowBlur = 14;
+      drawDiamond(mx,my,pulse,t*0.0012,'rgba(244,241,255,0.95)');
+      ctx.restore();
+    }
+
+    if(!reduceMotion) requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ---------------- reveal on scroll ---------------- */
+(function(){
+  const cards = document.querySelectorAll('.card');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach((entry,i)=>{
+      if(entry.isIntersecting){
+        setTimeout(()=>entry.target.classList.add('in'), i*40);
+        io.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.15});
+  cards.forEach(c=>io.observe(c));
+})();
+
+/* ---------------- pricing buttons -> scroll to contact ---------------- */
+document.querySelectorAll('.card .pick').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.getElementById('ติดต่อ').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+</script>
+</body>
+</html>
